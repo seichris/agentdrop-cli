@@ -12,13 +12,12 @@
 
 **Secondary track:** Synthesis Open Track
 
-**Honest current implementation:** this repo already ships a strict JSON CLI for creating and claiming Linkdrop transfers on Base and other supported EVM chains.
+**Honest current implementation:** this repo now ships both a strict JSON CLI for creating and claiming Linkdrop transfers and a minimal x402-gated AgentDrop service with discoverability endpoints.
 
 **What must be true by demo day for the Base track pitch to hold cleanly:**
-- The service itself should accept payment via x402.
-- The service should be discoverable by other agents.
 - The demo should show a real claim flow on Base.
 - The demo should show the claimed funds being used for a first paid action or wallet activation flow.
+- The x402 facilitator must be reachable in the live demo environment.
 
 ## Core Thesis
 
@@ -143,6 +142,8 @@ Use this wording if the x402 wrapper is still incomplete at submission time:
 
 ### Current truth from this repo
 
+- A minimal Express service with an x402 paywall for campaign creation.
+- Free discovery routes at `/`, `/health`, `/agent.json`, `/.well-known/agent.json`, `/v1/capabilities`, and `/v1/pricing`.
 - A single-file CLI agent for Linkdrop transfers.
 - Strict JSON-only output for success and error cases.
 - `send` flow that creates and deposits a claim link.
@@ -152,13 +153,12 @@ Use this wording if the x402 wrapper is still incomplete at submission time:
 
 ### How to describe the current implementation
 
-`We built the transfer and redemption primitive first: a JSON-first CLI that other agents can call to create claimable incentives and redeem them onchain.`
+`We built the transfer and redemption primitive first as a JSON-first CLI, then wrapped it in a minimal x402 service so other agents can pay to create claimable onboarding credits programmatically.`
 
 ### Next layer to demo for the Base track
 
-- A small x402-paid service endpoint around claim creation.
-- A discoverability surface for other agents.
 - A simple campaign flow: fund credit, claim credit, take first paid action.
+- A recipient-side first paid action using the claimed wallet balance.
 
 ## Technical Architecture
 

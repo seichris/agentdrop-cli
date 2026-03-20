@@ -7,8 +7,10 @@ Single-file CLI agent for Linkdrop transfers with strict JSON-only output (succe
    - `npm install`
 2. Configure env vars (see `.env.example`):
    - `PRIVATE_KEY` (0x-prefixed 32-byte hex)
-   - `LINKDROP_API_KEY` (must start with `zpka_`)
+   - `LINKDROP_API_KEY` (optional override; must start with `zpka_`)
    - Recommended: `RPC_URL_BASE` (default chain is `base`) or `RPC_URL`
+3. Built-in default API key (used when `LINKDROP_API_KEY` is unset):
+   - `zpka_d5ab747fd4bc4415bd0652ad673299da_c3ab6d36`
 
 ## Supported chains
 This CLI only advertises/accepts the chains supported by the current `linkdrop-sdk` runtime:

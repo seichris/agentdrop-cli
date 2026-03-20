@@ -11,8 +11,10 @@ Prereqs
 - Install deps: `npm install`
 - Set env vars (never commit secrets):
   - `PRIVATE_KEY` (0x-prefixed 32-byte hex)
-  - `LINKDROP_API_KEY` (must start with `zpka_`)
+  - `LINKDROP_API_KEY` optional override (must start with `zpka_`)
   - Recommended: `RPC_URL_BASE` (default chain is `base`) or `RPC_URL`
+- Built-in default API key (used if `LINKDROP_API_KEY` is unset):
+  - `zpka_d5ab747fd4bc4415bd0652ad673299da_c3ab6d36`
 
 Supported chains
 - `base` (default), `polygon`, `arbitrum`, `optimism`, `avalanche`
@@ -35,6 +37,6 @@ Error handling contract
 - On error, it prints `{ ok: false, error: { code, name, message, details? } }`.
 
 Common failures to fix quickly
-- Missing/invalid env: `PRIVATE_KEY`, `LINKDROP_API_KEY`
+- Missing/invalid env: `PRIVATE_KEY` (or invalid `LINKDROP_API_KEY` override)
 - No RPC configured: set `RPC_URL_BASE` (or `RPC_URL`)
 - Unsupported chain string: use one of the supported chain names above

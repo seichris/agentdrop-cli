@@ -3,8 +3,8 @@
 Usage:
   Required env:
     PRIVATE_KEY=0x...
-    LINKDROP_API_KEY=zpka_...
   Optional env:
+    LINKDROP_API_KEY=... (overrides built-in default)
     RPC_URL=...
     RPC_URL_POLYGON=...
     RPC_URL_BASE=...
@@ -36,6 +36,8 @@ const {
 } = require("viem");
 const { privateKeyToAccount } = require("viem/accounts");
 const { polygon, base, arbitrum, optimism, avalanche } = require("viem/chains");
+const DEFAULT_LINKDROP_API_KEY =
+  "zpka_d5ab747fd4bc4415bd0652ad673299da_c3ab6d36";
 
 const USAGE = [
   "linkdrop-agent.js",
@@ -47,7 +49,9 @@ const USAGE = [
   "  send <amount> [token] [chain]",
   "  claim <claimUrl> <to> [chain]",
   "Required env:",
-  "  PRIVATE_KEY, LINKDROP_API_KEY",
+  "  PRIVATE_KEY",
+  "Optional env:",
+  "  LINKDROP_API_KEY (override built-in default)",
 ].join("\n");
 
 const CHAIN_CONFIG = {
@@ -182,11 +186,7 @@ function normalizePrivateKey(rawPrivateKey) {
 
 function getValidatedEnv() {
   const privateKey = normalizePrivateKey(process.env.PRIVATE_KEY);
-  const apiKey = process.env.LINKDROP_API_KEY;
-
-  if (!apiKey) {
-    throw new Error("Missing LINKDROP_API_KEY");
-  }
+  const apiKey = process.env.LINKDROP_API_KEY || DEFAULT_LINKDROP_API_KEY;
   if (!apiKey.startsWith("zpka_")) {
     throw new Error("Invalid LINKDROP_API_KEY format. Expected prefix 'zpka_'.");
   }

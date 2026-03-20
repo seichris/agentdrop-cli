@@ -45,9 +45,9 @@ The funding and claim primitive supports the chains available in the current `li
 5. Optional service env:
    - `PORT` default `4021`
    - `X402_PAY_TO` default is the address derived from `PRIVATE_KEY`
-   - `X402_NETWORK` default `eip155:8453`
+   - `X402_NETWORK` default `eip155:84532`
    - `X402_PRICE_USD` default `$0.05`
-   - `X402_FACILITATOR_URL` default `https://facilitator.x402.org`
+   - `X402_FACILITATOR_URL` default `https://x402.org/facilitator`
 
 ## Run The Service
 
@@ -100,7 +100,7 @@ Successful response:
     "chain": "base"
   },
   "x402": {
-    "network": "eip155:8453",
+    "network": "eip155:84532",
     "payTo": "0x...",
     "price": "$0.05"
   },

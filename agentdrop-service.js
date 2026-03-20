@@ -18,8 +18,8 @@ const {
 
 const DEFAULT_PORT = 4021;
 const DEFAULT_X402_PRICE = "$0.05";
-const DEFAULT_X402_NETWORK = "eip155:8453";
-const DEFAULT_X402_FACILITATOR_URL = "https://facilitator.x402.org";
+const DEFAULT_X402_NETWORK = "eip155:84532";
+const DEFAULT_X402_FACILITATOR_URL = "https://x402.org/facilitator";
 const APP_NAME = "AgentDrop";
 
 function getServiceConfig(env = process.env) {

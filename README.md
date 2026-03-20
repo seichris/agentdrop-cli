@@ -59,7 +59,7 @@ npm run service
 
 On startup it prints one JSON object with the active x402 configuration.
 
-Note: the service needs live access to the configured x402 facilitator URL during startup.
+The service attempts x402 initialization during startup. If the facilitator is unavailable, the free routes still boot and the paid route returns `503 X402_UNAVAILABLE` until the facilitator is reachable. The service re-attempts x402 initialization lazily on paid requests.
 
 ### Free routes
 
@@ -115,6 +115,88 @@ Successful response:
 ```
 
 If the request is unpaid or underpaid, the x402 middleware returns `402 Payment Required` with payment instructions.
+
+## Test Run
+
+There is not a one-command end-to-end test in the repo yet, but you can exercise the important paths locally.
+
+### 1. Fast local checks
+
+Syntax-check the service and CLI:
+
+```bash
+npm run check
+```
+
+Verify the CLI contract still prints JSON help:
+
+```bash
+npm run smoke:cli
+```
+
+### 2. Safe local service boot with a dummy key
+
+This verifies boot, discovery routes, and degraded x402 behavior without funding a real transfer:
+
+```bash
+PRIVATE_KEY=0x1111111111111111111111111111111111111111111111111111111111111111 PORT=4022 npm run service
+```
+
+In another terminal:
+
+```bash
+curl -s http://127.0.0.1:4022/health
+curl -s http://127.0.0.1:4022/.well-known/agent.json
+curl -s http://127.0.0.1:4022/v1/pricing
+```
+
+Test the paid route shape:
+
+```bash
+curl -s -X POST http://127.0.0.1:4022/v1/campaigns \
+  -H 'Content-Type: application/json' \
+  -d '{"amount":"0.01","token":"native","chain":"base"}'
+```
+
+Expected result:
+
+- If the facilitator is reachable and payment is missing, the route should return `402 Payment Required`.
+- If the facilitator is not reachable, the route should return `503 X402_UNAVAILABLE`.
+
+### 3. Real CLI transfer flow
+
+Use a funded key and a real RPC:
+
+```bash
+export PRIVATE_KEY=0xYOUR_FUNDED_KEY
+export RPC_URL_BASE=https://mainnet.base.org
+node linkdrop-agent.js send --amount 0.0001 --token native --chain base
+```
+
+Then redeem the returned claim URL:
+
+```bash
+node linkdrop-agent.js claim --url "<claimUrl>" --to 0xRecipient --chain base
+```
+
+### 4. Real service flow
+
+Set a funded key, a real RPC, and a reachable facilitator:
+
+```bash
+export PRIVATE_KEY=0xYOUR_FUNDED_KEY
+export RPC_URL_BASE=https://mainnet.base.org
+export PORT=4021
+npm run service
+```
+
+Then:
+
+- Check `GET /health` and confirm `x402Ready: true`.
+- Send an unpaid `POST /v1/campaigns` request and confirm you get `402 Payment Required`.
+- Pay that route with an x402-aware client and confirm you receive `claimUrl`, `transferId`, and `depositTx`.
+
+This repo does not yet ship a dedicated x402 client smoke script, so the last step currently requires your own x402-capable client.
 
 ## Use The CLI Primitive
 

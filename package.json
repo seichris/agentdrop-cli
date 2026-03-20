@@ -6,6 +6,8 @@
   "main": "agentdrop-service.js",
   "scripts": {
     "agent": "node linkdrop-agent.js",
+    "check": "node --check agentdrop-core.js && node --check agentdrop-service.js && node --check linkdrop-agent.js",
+    "smoke:cli": "node linkdrop-agent.js --help",
     "service": "node agentdrop-service.js",
     "start": "node agentdrop-service.js"
   },

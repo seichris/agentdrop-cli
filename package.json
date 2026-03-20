@@ -1,0 +1,14 @@
+{
+  "name": "linkdrop-sdk-cli",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Single-file Linkdrop agent CLI",
+  "main": "linkdrop-agent.js",
+  "scripts": {
+    "start": "node linkdrop-agent.js"
+  },
+  "dependencies": {
+    "linkdrop-sdk": "3.15.2-beta",
+    "viem": "2.46.2"
+  }
+}

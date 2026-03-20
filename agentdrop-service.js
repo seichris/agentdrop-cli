@@ -83,6 +83,7 @@ function createApp(config) {
   const x402State = {
     ready: false,
     initError: null,
+    initPromise: null,
   };
   const manifest = buildManifest(config);
   const paidMiddleware = paymentMiddleware(
@@ -106,48 +107,66 @@ function createApp(config) {
   );
 
   async function initializeX402() {
-    try {
-      await resourceServer.initialize();
-      x402State.ready = true;
-      x402State.initError = null;
+    if (x402State.ready) {
       return true;
-    } catch (error) {
-      x402State.ready = false;
-      x402State.initError = serializeError(error);
-      process.stderr.write(
-        `${JSON.stringify({
-          ok: false,
-          warning: {
-            code: "X402_INIT_FAILED",
-            ...x402State.initError,
-          },
-        })}\n`
-      );
-      return false;
     }
+
+    if (x402State.initPromise) {
+      return x402State.initPromise;
+    }
+
+    x402State.initPromise = (async () => {
+      try {
+        await resourceServer.initialize();
+        x402State.ready = true;
+        x402State.initError = null;
+        return true;
+      } catch (error) {
+        x402State.ready = false;
+        x402State.initError = serializeError(error);
+        process.stderr.write(
+          `${JSON.stringify({
+            ok: false,
+            warning: {
+              code: "X402_INIT_FAILED",
+              ...x402State.initError,
+            },
+          })}\n`
+        );
+        return false;
+      } finally {
+        x402State.initPromise = null;
+      }
+    })();
+
+    return x402State.initPromise;
   }
 
   app.use(express.json());
 
   app.use((req, res, next) => {
     if (req.method === "POST" && req.path === "/v1/campaigns") {
-      if (!x402State.ready) {
-        res.status(503).json({
-          ok: false,
-          error: {
-            code: "X402_UNAVAILABLE",
-            name: "Error",
-            message:
-              "x402 is unavailable because the facilitator could not be reached during startup.",
-            ...(x402State.initError
-              ? { details: x402State.initError }
-              : {}),
-          },
-        });
-        return;
-      }
+      initializeX402()
+        .then((ready) => {
+          if (!ready) {
+            res.status(503).json({
+              ok: false,
+              error: {
+                code: "X402_UNAVAILABLE",
+                name: "Error",
+                message:
+                  "x402 is unavailable because the facilitator could not be reached.",
+                ...(x402State.initError
+                  ? { details: x402State.initError }
+                  : {}),
+              },
+            });
+            return;
+          }
 
-      paidMiddleware(req, res, next);
+          paidMiddleware(req, res, next);
+        })
+        .catch(next);
       return;
     }
 

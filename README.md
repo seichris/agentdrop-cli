@@ -4,6 +4,8 @@ AgentDrop is an x402-enabled agent service for claimable onboarding credits.
 
 It helps agent apps solve activation, not just checkout: pay AgentDrop to create a claimable credit, share the claim URL with a target agent or user, and use that funded wallet to bootstrap a first paid action.
 
+![AgentDrop banner](./agentdrop_banner.png)
+
 This repo ships two layers:
 
 - `agentdrop-service.js`: an Express service with an x402 paywall for campaign creation

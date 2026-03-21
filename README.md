@@ -1,8 +1,8 @@
 # AgentDrop
 
-AgentDrop is an x402-enabled agent service for claimable onboarding credits.
+AgentDrop is an x402-enabled growth service for agent apps.
 
-It helps agent apps solve activation, not just checkout: pay AgentDrop to create a claimable credit, share the claim URL with a target agent or user, and use that funded wallet to bootstrap a first paid action.
+It helps developers solve activation, not just checkout: pay AgentDrop to create a funded claim link, share it with a target agent or user via text message or email, and sponsor their first paid onchain interaction.
 
 ![AgentDrop banner](./agentdrop_banner.png)
 

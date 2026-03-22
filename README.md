@@ -6,7 +6,7 @@ It helps developers solve activation, not just checkout: pay AgentDrop to create
 
 ![AgentDrop banner](./agentdrop_banner.png)
 
-## Live Service
+## x402 Endpoints
 
 - Base URL: `https://agentdrop.8o.vc`
 - Health: `https://agentdrop.8o.vc/health`
